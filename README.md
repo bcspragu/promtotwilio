@@ -1,3 +1,25 @@
+# bcspragu/promtotwilio
+
+This is a fork of swatto/promtotwillio. I mainly forked it to update the Go
+version, but then I hung around and changed a few other things:
+
+* Dependency changes
+  * Removed `fasthttp` for the standard library's `net/http`
+  * Removed `jsonparser` for the standard library's `encoding/json`
+  * Removed `logrus` for the standard library's `log`
+  * Swapped out `carlosdp/twiliogo` for the official `twilio/twilio-go` client
+* Removed the `?receiver=<number>` functionality
+  * I imagine most `promtotwilio` instances will be deployed on private networks, but it's a dangerous attack vector for those caught unawares.
+  * One way to re-implement this more safely would be a configurable list of destinations based on req params
+* Updated the Dockerfile
+
+As a general caveat: sending text message alerts isn't a great alerting
+strategy for a production system, where you'd probably want something more
+robust and full-featured. I use this for a home cluster where I really just
+want to know if the basement is about to catch fire.
+
+Original README below.
+
 # Prometheus alert with text message
 
 This is a simple and stupid program that will receive webhooks from [Prometheus](https://prometheus.io/) to send them as text message (using [Twilio](https://www.twilio.com/)) with the summary of the alert.

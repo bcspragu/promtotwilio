@@ -3,11 +3,11 @@
 #-----------------------------------------------------------------------------
 
 # name of container
-CONTAINER_NAME = swatto/promtotwilio
+CONTAINER_NAME = bcspragu/promtotwilio
 
 # name of instance and other options you want to pass to docker run for testing
 INSTANCE_NAME = promtotwilio
-RUN_OPTS = -p 9090:9090 --env-file ./.env
+RUN_OPTS = -p 8080:8080 --env-file ./.env
 
 #-----------------------------------------------------------------------------
 # default target

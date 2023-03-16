@@ -1,27 +1,29 @@
-FROM golang:1.13-alpine3.10 as builder
+FROM golang:1.20-alpine as build
 
 RUN mkdir /user && \
     echo 'nobody:x:65534:65534:nobody:/:' > /user/passwd && \
     echo 'nobody:x:65534:' > /user/group
 
-WORKDIR /src
-RUN apk add --update --no-cache ca-certificates git
+WORKDIR /build
+RUN apk add --update --no-cache ca-certificates git tzdata && update-ca-certificates
 
 COPY ./go.mod ./go.sum ./
-RUN go mod download
+RUN go mod download && go mod verify
 
-COPY ./ ./
-RUN CGO_ENABLED=0 go build \
+COPY ./main.go ./server.go ./server_test.go ./
+
+RUN go test ./... && CGO_ENABLED=0 go build \
     -installsuffix 'static' \
     -o /promtotwilio .
 
 FROM scratch
 
-COPY --from=builder /user/group /user/passwd /etc/
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /promtotwilio /promtotwilio
+COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=build /user/group /user/passwd /etc/
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /promtotwilio /promtotwilio
 
-EXPOSE 9090
+EXPOSE 8080
 USER nobody:nobody
 
 ENTRYPOINT ["./promtotwilio"]

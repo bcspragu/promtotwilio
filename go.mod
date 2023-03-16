@@ -1,10 +1,13 @@
-module github.com/swatto/promtotwilio
+module github.com/bcspragu/promtotwilio
 
-go 1.12
+go 1.20
 
 require (
-	github.com/buger/jsonparser v0.0.0-20181115193947-bf1c66bbce23
-	github.com/carlosdp/twiliogo v0.0.0-20161027183705-b26045ebb9d1
-	github.com/sirupsen/logrus v1.3.0
-	github.com/valyala/fasthttp v1.2.0
+	github.com/google/go-cmp v0.5.9
+	github.com/twilio/twilio-go v1.3.5
+)
+
+require (
+	github.com/golang/mock v1.6.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 )
